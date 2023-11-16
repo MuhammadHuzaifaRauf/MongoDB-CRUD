@@ -1,4 +1,5 @@
 import React , { useState , useEffect } from 'react'
+import axios from 'axios'
 
 
 
@@ -12,6 +13,7 @@ const initialState = {
 export default function Add() {
 
 const [ state , setState] = useState(initialState)
+const URL = "http://localhost:8000"
 
 
 // Handle Change Function
@@ -24,7 +26,33 @@ setState( s => ({ ...s, [name] : value }) )
 
 const handleSubmit = e => {
      e.preventDefault();
-    console.log('state', state);
+
+     let { title , location , description } = state;
+     title = title.trim();
+     location = location.trim();
+     description = description.trim();
+
+     if( title.length < 3 ){ return alert(" Please enter your title correctly ") };
+     if( location.length < 3 ){ return alert(" Please enter your location correctly ") };
+     if( description.length < 3 ){ return alert(" Please enter your description correctly ") };
+
+     let todo = {
+        title , location , description,
+        // status:"active",
+        // dateCreated: new Date().getTime()
+     }
+
+    axios.post( `${ URL }/createTodo` , todo )
+
+    .then( (res) => {
+    console.log('res', res);
+    } )
+
+    .catch( (err) => {
+        console.error( 'err' , err )
+    } )
+
+
 }
 
 
